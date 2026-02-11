@@ -1,0 +1,284 @@
+// CodeEd Database Schema
+// E-Commerce Platform for Coding Courses
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  password     String
+  name         String
+  avatar       String?
+  skillLevel   String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  enrollments     Enrollment[]
+  progress        UserProgress[]
+  cartItems       CartItem[]
+  orders          Order[]
+  badges          UserBadge[]
+  gamification    Gamification?
+  refreshTokens   RefreshToken[]
+  chatHistory     ChatMessage[]
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+// ============================================
+// COURSE MANAGEMENT
+// ============================================
+
+model Course {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  longDescription String?
+  thumbnail    String?
+  price        Decimal
+  originalPrice Decimal?
+  difficulty   String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  category     String
+  tags         String?
+  duration     Int
+  totalLessons Int      @default(0)
+  rating       Decimal  @default(0)
+  ratingCount  Int      @default(0)
+  enrollmentCount Int   @default(0)
+  instructor   String
+  instructorBio String?
+  isPublished  Boolean  @default(false)
+  isFeatured   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  modules      Module[]
+  enrollments  Enrollment[]
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([difficulty])
+  @@index([isPublished])
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  description String?
+  order       Int
+  duration    Int
+  videoUrl    String?
+  content     String?
+  isPreview   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  course   Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress UserProgress[]
+
+  @@index([courseId])
+  @@index([order])
+}
+
+// ============================================
+// ENROLLMENT & PROGRESS
+// ============================================
+
+model Enrollment {
+  id           String   @id @default(cuid())
+  userId       String
+  courseId     String
+  enrolledAt   DateTime @default(now())
+  completedAt  DateTime?
+  progress     Int      @default(0)
+  lastAccessedAt DateTime?
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+}
+
+model UserProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  moduleId    String
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  watchTime   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([userId])
+  @@index([moduleId])
+}
+
+// ============================================
+// SHOPPING CART & ORDERS
+// ============================================
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  userId        String
+  orderNumber   String   @unique
+  status        String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, CANCELLED, REFUNDED
+  subtotal      Decimal
+  discount      Decimal  @default(0)
+  total         Decimal
+  paymentMethod String?
+  paymentId     String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items  OrderItem[]
+
+  @@index([userId])
+  @@index([orderNumber])
+  @@index([status])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  courseId  String
+  price     Decimal
+  quantity  Int     @default(1)
+
+  // Relations
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+// ============================================
+// GAMIFICATION
+// ============================================
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  icon        String
+  criteria    String
+  points      Int      @default(0)
+  rarity      String   @default("COMMON") // COMMON, UNCOMMON, RARE, EPIC, LEGENDARY
+  category    String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  users UserBadge[]
+
+  @@index([category])
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  unlockedAt DateTime @default(now())
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+model Gamification {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  points          Int      @default(0)
+  level           Int      @default(1)
+  currentStreak   Int      @default(0)
+  longestStreak   Int      @default(0)
+  lastActivityAt  DateTime @default(now())
+  coursesCompleted Int     @default(0)
+  modulesCompleted Int     @default(0)
+  totalWatchTime  Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([points])
+  @@index([level])
+}
+
+// ============================================
+// CHAT & AI
+// ============================================
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String   // USER, ASSISTANT, SYSTEM
+  content   String
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
