@@ -22,7 +22,7 @@
     "education",
     "ai-chatbot"
   ],
-  "author": "Abiskar Acharya",
+  "author": "Ruhan Khan",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.22.0",

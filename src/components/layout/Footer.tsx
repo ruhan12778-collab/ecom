@@ -99,7 +99,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} CodeEd. All rights reserved.
           </p>
           <p className="text-text-secondary text-sm mt-2 sm:mt-0">
-            MSc FYP - COMP1682 | University of Greenwich
+            Built by Ruhan Khan
           </p>
         </div>
       </div>
