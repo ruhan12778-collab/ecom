@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 
@@ -34,7 +35,42 @@ interface CoursesResponse {
   }
 }
 
+// ── This is the default export — wraps CoursesContent in Suspense ─────────────
 export default function CoursesPage() {
+  return (
+    <Suspense fallback={<CoursesLoadingSkeleton />}>
+      <CoursesContent />
+    </Suspense>
+  )
+}
+
+function CoursesLoadingSkeleton() {
+  return (
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="h-8 bg-bg-tertiary rounded w-48 mb-2 animate-pulse" />
+        <div className="h-5 bg-bg-tertiary rounded w-72 mb-8 animate-pulse" />
+        <div className="card mb-8 h-28 animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden animate-pulse">
+              <div className="aspect-video bg-bg-tertiary" />
+              <div className="p-4">
+                <div className="h-4 bg-bg-tertiary rounded w-1/4 mb-2" />
+                <div className="h-6 bg-bg-tertiary rounded w-3/4 mb-2" />
+                <div className="h-4 bg-bg-tertiary rounded w-full mb-4" />
+                <div className="h-8 bg-bg-tertiary rounded w-1/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Inner component that uses useSearchParams ─────────────────────────────────
+function CoursesContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [courses, setCourses] = useState<Course[]>([])
@@ -80,7 +116,6 @@ export default function CoursesPage() {
     const updated = { ...filters, ...newFilters, page: 1 }
     setFilters(updated)
 
-    // Update URL params
     const params = new URLSearchParams()
     if (updated.search) params.set('search', updated.search)
     if (updated.category) params.set('category', updated.category)
@@ -93,8 +128,15 @@ export default function CoursesPage() {
     { value: '', label: 'All Categories' },
     { value: 'python', label: 'Python' },
     { value: 'javascript', label: 'JavaScript' },
+    { value: 'typescript', label: 'TypeScript' },
     { value: 'web', label: 'Web Development' },
     { value: 'data', label: 'Data Science' },
+    { value: 'databases', label: 'Databases' },
+    { value: 'cloud', label: 'Cloud' },
+    { value: 'devops', label: 'DevOps' },
+    { value: 'security', label: 'Security' },
+    { value: 'algorithms', label: 'Algorithms' },
+    { value: 'mobile', label: 'Mobile' },
   ]
 
   const difficulties = [
@@ -119,7 +161,7 @@ export default function CoursesPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-primary mb-2">Course Catalog</h1>
           <p className="text-text-secondary">
-            Browse our collection of coding courses and start learning today
+            Browse our collection of {courses.length > 0 ? '17' : ''} coding courses and start learning today
           </p>
         </div>
 
@@ -127,13 +169,18 @@ export default function CoursesPage() {
         <div className="card mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 relative">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
               <input
                 type="text"
                 placeholder="Search courses..."
                 value={filters.search}
                 onChange={(e) => updateFilters({ search: e.target.value })}
-                className="input"
+                className="input pl-9"
               />
             </div>
 
@@ -144,9 +191,7 @@ export default function CoursesPage() {
               className="input"
             >
               {categories.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
+                <option key={cat.value} value={cat.value}>{cat.label}</option>
               ))}
             </select>
 
@@ -157,9 +202,7 @@ export default function CoursesPage() {
               className="input"
             >
               {difficulties.map((diff) => (
-                <option key={diff.value} value={diff.value}>
-                  {diff.label}
-                </option>
+                <option key={diff.value} value={diff.value}>{diff.label}</option>
               ))}
             </select>
           </div>
@@ -177,9 +220,7 @@ export default function CoursesPage() {
                 className="input w-auto"
               >
                 {sortOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
             </div>
@@ -190,12 +231,14 @@ export default function CoursesPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="card animate-pulse">
-                <div className="aspect-video bg-bg-tertiary rounded-lg mb-4" />
-                <div className="h-4 bg-bg-tertiary rounded w-1/4 mb-2" />
-                <div className="h-6 bg-bg-tertiary rounded w-3/4 mb-2" />
-                <div className="h-4 bg-bg-tertiary rounded w-full mb-4" />
-                <div className="h-8 bg-bg-tertiary rounded w-1/3" />
+              <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden animate-pulse">
+                <div className="aspect-video bg-bg-tertiary" />
+                <div className="p-4">
+                  <div className="h-4 bg-bg-tertiary rounded w-1/4 mb-2" />
+                  <div className="h-6 bg-bg-tertiary rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-bg-tertiary rounded w-full mb-4" />
+                  <div className="h-8 bg-bg-tertiary rounded w-1/3" />
+                </div>
               </div>
             ))}
           </div>
@@ -258,47 +301,57 @@ function CourseCard({ course }: { course: Course }) {
   }
 
   return (
-    <Link href={`/courses/${course.slug}`}>
-      <div className="card hover:border-accent-primary transition-all duration-200 cursor-pointer h-full flex flex-col">
+    <Link href={`/courses/${course.slug}`} className="group">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
         {/* Thumbnail */}
-        <div className="aspect-video bg-bg-tertiary rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
+        <div className="relative aspect-video overflow-hidden">
+          {course.thumbnail ? (
+            <Image
+              src={course.thumbnail}
+              alt={course.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <span className="text-4xl">💻</span>
+            </div>
+          )}
           {course.isFeatured && (
-            <span className="absolute top-2 right-2 badge bg-points-gold text-bg-primary">
+            <span className="absolute top-2 right-2 badge bg-yellow-400 text-yellow-900 text-xs shadow-sm">
               Featured
             </span>
           )}
-          <span className="text-4xl">💻</span>
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col p-4">
           <div className="flex items-center space-x-2 mb-2">
             <span className={`badge ${difficultyColors[course.difficulty]}`}>
               {course.difficulty.charAt(0) + course.difficulty.slice(1).toLowerCase()}
             </span>
-            <span className="text-xs text-text-secondary">{course.category}</span>
+            <span className="text-xs text-text-secondary capitalize">{course.category}</span>
           </div>
 
-          <h3 className="text-lg font-semibold text-text-primary mb-2 line-clamp-2">
+          <h3 className="text-base font-semibold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-primary transition-colors">
             {course.title}
           </h3>
+          <p className="text-xs text-text-secondary mb-2">by {course.instructor}</p>
+          <p className="text-sm text-text-secondary mb-3 line-clamp-2 flex-1">{course.description}</p>
 
-          <p className="text-sm text-text-secondary mb-4 line-clamp-2 flex-1">
-            {course.description}
-          </p>
-
-          {/* Meta info */}
-          <div className="flex items-center text-xs text-text-secondary mb-4 space-x-4">
+          <div className="flex items-center text-xs text-text-secondary mb-3 space-x-3">
             <span>{formatDuration(course.duration)}</span>
+            <span>·</span>
             <span>{course.totalLessons} lessons</span>
+            <span>·</span>
             <span>{course.enrollmentCount.toLocaleString()} students</span>
           </div>
 
-          {/* Rating and price */}
-          <div className="flex items-center justify-between pt-4 border-t border-bg-tertiary">
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
             <div className="flex items-center space-x-1">
-              <span className="text-yellow-500">⭐</span>
-              <span className="font-medium">{Number(course.rating).toFixed(1)}</span>
+              <span className="text-yellow-400 text-sm">⭐</span>
+              <span className="font-semibold text-sm">{Number(course.rating).toFixed(1)}</span>
               <span className="text-text-secondary text-xs">({course.ratingCount})</span>
             </div>
             <div className="text-right">

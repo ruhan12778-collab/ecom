@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, use } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
@@ -42,6 +43,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [addedToCart, setAddedToCart] = useState(false)
+  const [isEnrolled, setIsEnrolled] = useState(false)
   const { addItem, items } = useCartStore()
   const { isAuthenticated } = useAuthStore()
 
@@ -50,6 +52,12 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
   useEffect(() => {
     fetchCourse()
   }, [resolvedParams.slug])
+
+  useEffect(() => {
+    if (isAuthenticated && course) {
+      checkEnrollment()
+    }
+  }, [isAuthenticated, course])
 
   const fetchCourse = async () => {
     try {
@@ -65,6 +73,21 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
       setError('Failed to load course')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const checkEnrollment = async () => {
+    try {
+      const response = await fetch('/api/enrollments')
+      const data = await response.json()
+      if (data.success) {
+        const enrolled = data.data.some(
+          (e: { course: { slug: string } }) => e.course.slug === resolvedParams.slug
+        )
+        setIsEnrolled(enrolled)
+      }
+    } catch {
+      // Silently fail — worst case user sees Add to Cart
     }
   }
 
@@ -232,8 +255,20 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
           <div className="lg:col-span-1">
             <div className="card sticky top-24">
               {/* Thumbnail */}
-              <div className="aspect-video bg-bg-tertiary rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-6xl">💻</span>
+              <div className="relative aspect-video bg-bg-tertiary rounded-xl mb-4 overflow-hidden">
+                {course.thumbnail ? (
+                  <Image
+                    src={course.thumbnail}
+                    alt={course.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                    <span className="text-6xl">💻</span>
+                  </div>
+                )}
               </div>
 
               {/* Price */}
@@ -255,7 +290,19 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
               {/* Actions */}
               <div className="space-y-3">
-                {isInCart ? (
+                {isEnrolled ? (
+                  <>
+                    <Link
+                      href={`/courses/${resolvedParams.slug}/learn`}
+                      className="w-full btn btn-primary py-3 block text-center"
+                    >
+                      ▶ Continue Learning
+                    </Link>
+                    <p className="text-center text-sm text-green-600 font-medium">
+                      ✓ You are enrolled in this course
+                    </p>
+                  </>
+                ) : isInCart ? (
                   <Link href="/cart" className="w-full btn btn-secondary py-3 block text-center">
                     View in Cart
                   </Link>

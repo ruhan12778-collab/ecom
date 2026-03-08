@@ -32,6 +32,9 @@ export function Header() {
                 <Link href="/dashboard" className="text-text-secondary hover:text-text-primary transition-colors">
                   Dashboard
                 </Link>
+                <Link href="/leaderboard" className="text-text-secondary hover:text-text-primary transition-colors">
+                  Leaderboard
+                </Link>
                 <Link href="/profile" className="text-text-secondary hover:text-text-primary transition-colors">
                   Profile
                 </Link>
@@ -112,6 +115,9 @@ export function Header() {
                 <>
                   <Link href="/dashboard" className="text-text-secondary hover:text-text-primary">
                     Dashboard
+                  </Link>
+                  <Link href="/leaderboard" className="text-text-secondary hover:text-text-primary">
+                    Leaderboard
                   </Link>
                   <Link href="/profile" className="text-text-secondary hover:text-text-primary">
                     Profile
