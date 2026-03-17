@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
+import { StickyCheckoutBar } from '@/components/layout/StickyCheckoutBar'
 
 interface Module {
   id: string
@@ -37,8 +38,7 @@ interface Course {
   modules: Module[]
 }
 
-export default function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = use(params)
+export default function CourseDetailPage({ params }: { params: { slug: string } }) {
   const [course, setCourse] = useState<Course | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -51,7 +51,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
   useEffect(() => {
     fetchCourse()
-  }, [resolvedParams.slug])
+  }, [params.slug])
 
   useEffect(() => {
     if (isAuthenticated && course) {
@@ -61,7 +61,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
   const fetchCourse = async () => {
     try {
-      const response = await fetch(`/api/courses/${resolvedParams.slug}`)
+      const response = await fetch(`/api/courses/${params.slug}`)
       const data = await response.json()
 
       if (data.success) {
@@ -82,7 +82,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
       const data = await response.json()
       if (data.success) {
         const enrolled = data.data.some(
-          (e: { course: { slug: string } }) => e.course.slug === resolvedParams.slug
+          (e: { course: { slug: string } }) => e.course.slug === params.slug
         )
         setIsEnrolled(enrolled)
       }
@@ -123,7 +123,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
     return (
       <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-text-primary mb-4">Course Not Found</h1>
+          <h1 className="text-2xl font-display font-bold text-text-primary mb-4">Course Not Found</h1>
           <p className="text-text-secondary mb-8">{error}</p>
           <Link href="/courses" className="btn btn-primary">
             Browse Courses
@@ -150,14 +150,14 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
     : 0
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 pb-24">
       <div className="max-w-5xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm">
-          <Link href="/courses" className="text-text-secondary hover:text-text-primary">
+          <Link href="/courses" className="text-stone-500 hover:text-stone-900 transition-colors">
             Courses
           </Link>
-          <span className="mx-2 text-text-secondary">/</span>
+          <span className="mx-2 text-stone-400">/</span>
           <span className="text-text-primary">{course.title}</span>
         </nav>
 
@@ -173,14 +173,14 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                 </span>
                 <span className="text-text-secondary">{course.category}</span>
               </div>
-              <h1 className="text-3xl font-bold text-text-primary mb-4">{course.title}</h1>
+              <h1 className="text-3xl font-display font-bold text-text-primary mb-4">{course.title}</h1>
               <p className="text-text-secondary text-lg">{course.description}</p>
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap gap-4 mb-6">
+            <div className="flex flex-wrap gap-4 mb-8">
               <div className="flex items-center space-x-1">
-                <span className="text-yellow-500">⭐</span>
+                <span className="text-amber-500">{'\u2605'}</span>
                 <span className="font-medium">{Number(course.rating).toFixed(1)}</span>
                 <span className="text-text-secondary">({course.ratingCount} ratings)</span>
               </div>
@@ -192,10 +192,10 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
             </div>
 
             {/* Instructor */}
-            <div className="card mb-6">
-              <h3 className="font-semibold text-text-primary mb-2">Instructor</h3>
+            <div className="mb-8 pb-8 border-b border-stone-200">
+              <h3 className="font-display font-bold text-text-primary mb-3">Instructor</h3>
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-accent-primary rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-12 h-12 bg-stone-900 rounded-full flex items-center justify-center text-white font-bold">
                   {course.instructor.charAt(0)}
                 </div>
                 <div>
@@ -209,31 +209,29 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
             {/* Description */}
             {course.longDescription && (
-              <div className="card mb-6">
-                <h3 className="font-semibold text-text-primary mb-4">About This Course</h3>
-                <div className="prose prose-invert">
-                  <p className="text-text-secondary whitespace-pre-line">{course.longDescription}</p>
-                </div>
+              <div className="mb-8 pb-8 border-b border-stone-200">
+                <h3 className="font-display font-bold text-text-primary mb-4">About This Course</h3>
+                <p className="text-text-secondary whitespace-pre-line leading-relaxed">{course.longDescription}</p>
               </div>
             )}
 
             {/* Curriculum */}
-            <div className="card">
-              <h3 className="font-semibold text-text-primary mb-4">
+            <div className="mb-8">
+              <h3 className="font-display font-bold text-text-primary mb-4">
                 Course Curriculum ({course.modules.length} modules)
               </h3>
               <div className="space-y-2">
                 {course.modules.map((module, index) => (
                   <div
                     key={module.id}
-                    className="flex items-center justify-between p-3 bg-bg-tertiary rounded-lg"
+                    className="flex items-center justify-between p-4 bg-bg-secondary rounded-2xl"
                   >
                     <div className="flex items-center space-x-3">
-                      <span className="w-6 h-6 bg-bg-primary rounded-full flex items-center justify-center text-xs text-text-secondary">
+                      <span className="w-7 h-7 bg-stone-200 rounded-full flex items-center justify-center text-xs font-medium text-stone-600">
                         {index + 1}
                       </span>
                       <div>
-                        <p className="text-text-primary">{module.title}</p>
+                        <p className="text-text-primary font-medium">{module.title}</p>
                         {module.description && (
                           <p className="text-sm text-text-secondary">{module.description}</p>
                         )}
@@ -253,20 +251,20 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
           {/* Right column - Purchase card */}
           <div className="lg:col-span-1">
-            <div className="card sticky top-24">
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sticky top-24">
               {/* Thumbnail */}
-              <div className="relative aspect-video bg-bg-tertiary rounded-xl mb-4 overflow-hidden">
+              <div className="relative aspect-video bg-stone-100 rounded-2xl mb-4 overflow-hidden">
                 {course.thumbnail ? (
                   <Image
                     src={course.thumbnail}
                     alt={course.title}
                     fill
-                    className="object-cover"
+                    className="object-cover mix-blend-multiply"
                     sizes="(max-width: 1024px) 100vw, 400px"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <span className="text-6xl">💻</span>
+                  <div className="absolute inset-0 bg-gradient-to-br from-stone-300 to-stone-500 flex items-center justify-center">
+                    <span className="text-6xl">{'\uD83D\uDCBB'}</span>
                   </div>
                 )}
               </div>
@@ -274,15 +272,15 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
               {/* Price */}
               <div className="mb-4">
                 <div className="flex items-center space-x-3">
-                  <span className="text-3xl font-bold text-text-primary">
-                    ${Number(course.price).toFixed(2)}
+                  <span className="text-3xl font-display font-bold text-text-primary">
+                    {'\u00A3'}{Number(course.price).toFixed(2)}
                   </span>
                   {course.originalPrice && (
                     <>
                       <span className="text-lg text-text-secondary line-through">
-                        ${Number(course.originalPrice).toFixed(2)}
+                        {'\u00A3'}{Number(course.originalPrice).toFixed(2)}
                       </span>
-                      <span className="badge bg-accent-error text-white">{discount}% OFF</span>
+                      <span className="badge bg-red-50 text-red-700">{discount}% OFF</span>
                     </>
                   )}
                 </div>
@@ -293,13 +291,13 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                 {isEnrolled ? (
                   <>
                     <Link
-                      href={`/courses/${resolvedParams.slug}/learn`}
+                      href={`/courses/${params.slug}/learn`}
                       className="w-full btn btn-primary py-3 block text-center"
                     >
-                      ▶ Continue Learning
+                      {'\u25B6'} Continue Learning
                     </Link>
-                    <p className="text-center text-sm text-green-600 font-medium">
-                      ✓ You are enrolled in this course
+                    <p className="text-center text-sm text-accent-success font-medium">
+                      {'\u2713'} You are enrolled in this course
                     </p>
                   </>
                 ) : isInCart ? (
@@ -311,12 +309,12 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                     onClick={handleAddToCart}
                     className="w-full btn btn-primary py-3"
                   >
-                    {addedToCart ? '✓ Added to Cart' : 'Add to Cart'}
+                    {addedToCart ? '\u2713 Added to Cart' : 'Add to Cart'}
                   </button>
                 )}
                 {!isAuthenticated && (
                   <p className="text-center text-sm text-text-secondary">
-                    <Link href="/login" className="text-accent-primary hover:underline">
+                    <Link href="/login" className="text-stone-900 font-medium hover:underline">
                       Sign in
                     </Link>{' '}
                     to track your progress
@@ -325,27 +323,27 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
               </div>
 
               {/* Course includes */}
-              <div className="mt-6 pt-6 border-t border-bg-tertiary">
-                <h4 className="font-semibold text-text-primary mb-3">This course includes:</h4>
+              <div className="mt-6 pt-6 border-t border-stone-200">
+                <h4 className="font-display font-bold text-text-primary mb-3">This course includes:</h4>
                 <ul className="space-y-2 text-sm text-text-secondary">
                   <li className="flex items-center space-x-2">
-                    <span>📹</span>
+                    <span>{'\uD83D\uDCF9'}</span>
                     <span>{formatDuration(course.duration)} of video content</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <span>📚</span>
+                    <span>{'\uD83D\uDCDA'}</span>
                     <span>{course.totalLessons} lessons</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <span>📱</span>
+                    <span>{'\uD83D\uDCF1'}</span>
                     <span>Access on mobile and desktop</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <span>🏆</span>
+                    <span>{'\uD83C\uDFC6'}</span>
                     <span>Certificate of completion</span>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <span>♾️</span>
+                    <span>{'\u267E\uFE0F'}</span>
                     <span>Lifetime access</span>
                   </li>
                 </ul>
@@ -353,11 +351,11 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
               {/* Tags */}
               {course.tags && (
-                <div className="mt-6 pt-6 border-t border-bg-tertiary">
-                  <h4 className="font-semibold text-text-primary mb-3">Topics</h4>
+                <div className="mt-6 pt-6 border-t border-stone-200">
+                  <h4 className="font-display font-bold text-text-primary mb-3">Topics</h4>
                   <div className="flex flex-wrap gap-2">
                     {course.tags.split(',').map((tag) => (
-                      <span key={tag} className="badge bg-bg-tertiary text-text-secondary">
+                      <span key={tag} className="badge bg-stone-100 text-text-secondary">
                         {tag.trim()}
                       </span>
                     ))}
@@ -368,6 +366,16 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
       </div>
+
+      {/* Sticky Checkout Bar */}
+      <StickyCheckoutBar
+        title={course.title}
+        price={Number(course.price)}
+        isInCart={isInCart}
+        isEnrolled={isEnrolled}
+        onAddToCart={handleAddToCart}
+        slug={params.slug}
+      />
     </div>
   )
 }

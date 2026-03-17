@@ -57,15 +57,15 @@ export default function CartPage() {
   if (orderSuccess) {
     return (
       <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4">
-        <div className="card max-w-md w-full text-center">
-          <div className="text-6xl mb-4">🎉</div>
-          <h1 className="text-2xl font-bold text-text-primary mb-2">Order Confirmed!</h1>
+        <div className="max-w-md w-full text-center">
+          <div className="text-6xl mb-4">{'\uD83C\uDF89'}</div>
+          <h1 className="text-2xl font-display font-bold text-text-primary mb-2">Order Confirmed!</h1>
           <p className="text-text-secondary mb-4">
-            Your order <span className="font-mono text-accent-primary">{orderSuccess.orderNumber}</span> has been placed successfully.
+            Your order <span className="font-mono text-text-primary font-medium">{orderSuccess.orderNumber}</span> has been placed successfully.
           </p>
-          <div className="p-4 bg-points-gold/20 rounded-lg mb-6">
+          <div className="p-4 bg-points-gold/20 rounded-2xl mb-6">
             <p className="text-points-gold font-semibold">
-              +{orderSuccess.pointsEarned} points earned! ⭐
+              +{orderSuccess.pointsEarned} points earned! {'\u2B50'}
             </p>
           </div>
           <div className="space-y-3">
@@ -85,8 +85,8 @@ export default function CartPage() {
     return (
       <div className="min-h-[calc(100vh-140px)] flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="text-6xl mb-4">🛒</div>
-          <h1 className="text-2xl font-bold text-text-primary mb-2">Your Cart is Empty</h1>
+          <div className="text-6xl mb-4">{'\uD83D\uDED2'}</div>
+          <h1 className="text-2xl font-display font-bold text-text-primary mb-2">Your Cart is Empty</h1>
           <p className="text-text-secondary mb-6">
             Explore our courses and find something to learn!
           </p>
@@ -101,26 +101,26 @@ export default function CartPage() {
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-text-primary mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-display font-bold text-text-primary mb-8">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart items */}
-          <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
-              <div key={item.courseId} className="card flex gap-4">
-                <div className="w-24 h-16 bg-bg-tertiary rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl">💻</span>
+          <div className="lg:col-span-2 space-y-0">
+            {items.map((item, index) => (
+              <div key={item.courseId} className={`flex gap-4 py-5 ${index < items.length - 1 ? 'border-b border-stone-200' : ''}`}>
+                <div className="w-24 h-16 bg-stone-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <span className="text-2xl">{'\uD83D\uDCBB'}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-text-primary truncate">{item.title}</h3>
-                  <p className="text-lg font-bold text-accent-primary">${item.price.toFixed(2)}</p>
+                  <h3 className="font-display font-bold text-text-primary truncate">{item.title}</h3>
+                  <p className="text-lg font-display font-bold text-text-primary">{'\u00A3'}{item.price.toFixed(2)}</p>
                 </div>
                 <button
                   onClick={() => removeItem(item.courseId)}
-                  className="text-text-secondary hover:text-accent-error transition-colors"
+                  className="text-stone-400 hover:text-accent-error transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
               </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
 
             <button
               onClick={() => clearCart()}
-              className="text-sm text-text-secondary hover:text-accent-error"
+              className="text-sm text-stone-400 hover:text-accent-error mt-4 transition-colors"
             >
               Clear Cart
             </button>
@@ -136,24 +136,24 @@ export default function CartPage() {
 
           {/* Order summary */}
           <div className="lg:col-span-1">
-            <div className="card sticky top-24">
-              <h2 className="text-xl font-semibold text-text-primary mb-4">Order Summary</h2>
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 sticky top-24">
+              <h2 className="text-xl font-display font-bold text-text-primary mb-4">Order Summary</h2>
 
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-text-secondary">
                   <span>Subtotal ({items.length} items)</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{'\u00A3'}{total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-text-secondary">
                   <span>Discount</span>
-                  <span>$0.00</span>
+                  <span>{'\u00A3'}0.00</span>
                 </div>
               </div>
 
-              <div className="border-t border-bg-tertiary pt-4 mb-6">
-                <div className="flex justify-between text-xl font-bold text-text-primary">
+              <div className="border-t border-stone-200 pt-4 mb-6">
+                <div className="flex justify-between text-xl font-display font-bold text-text-primary">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{'\u00A3'}{total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -167,23 +167,23 @@ export default function CartPage() {
 
               {!isAuthenticated && (
                 <p className="mt-4 text-center text-sm text-text-secondary">
-                  <Link href="/login?redirect=/cart" className="text-accent-primary hover:underline">
+                  <Link href="/login?redirect=/cart" className="text-stone-900 font-medium hover:underline">
                     Sign in
                   </Link>{' '}
                   to complete your purchase
                 </p>
               )}
 
-              <div className="mt-6 p-4 bg-bg-tertiary rounded-lg">
+              <div className="mt-6 p-4 bg-stone-100 rounded-2xl">
                 <p className="text-sm text-text-secondary text-center">
-                  🔒 Demo Mode: No real payment required
+                  {'\uD83D\uDD12'} Demo Mode: No real payment required
                 </p>
               </div>
 
               {/* Points preview */}
-              <div className="mt-4 p-4 bg-points-gold/10 rounded-lg border border-points-gold/20">
+              <div className="mt-4 p-4 bg-points-gold/10 rounded-2xl border border-points-gold/20">
                 <p className="text-sm text-points-gold text-center">
-                  ⭐ You&apos;ll earn ~{items.length * 10} points with this purchase!
+                  {'\u2B50'} You&apos;ll earn ~{items.length * 10} points with this purchase!
                 </p>
               </div>
             </div>

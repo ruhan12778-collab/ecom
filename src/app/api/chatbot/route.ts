@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Get current user if authenticated
     const user = await getCurrentUser()
 
-    // Get AI response
+    // Get AI response (groq.ts now fetches all published courses internally)
     const response = await chat(
       message,
       user?.id,

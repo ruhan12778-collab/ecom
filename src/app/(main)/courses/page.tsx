@@ -50,10 +50,10 @@ function CoursesLoadingSkeleton() {
       <div className="max-w-7xl mx-auto">
         <div className="h-8 bg-bg-tertiary rounded w-48 mb-2 animate-pulse" />
         <div className="h-5 bg-bg-tertiary rounded w-72 mb-8 animate-pulse" />
-        <div className="card mb-8 h-28 animate-pulse" />
+        <div className="bg-white/60 rounded-3xl p-6 mb-8 h-28 animate-pulse" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden animate-pulse">
+            <div key={i} className="rounded-3xl overflow-hidden animate-pulse bg-white/40">
               <div className="aspect-video bg-bg-tertiary" />
               <div className="p-4">
                 <div className="h-4 bg-bg-tertiary rounded w-1/4 mb-2" />
@@ -159,14 +159,14 @@ function CoursesContent() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Course Catalog</h1>
+          <h1 className="text-3xl font-display font-bold text-text-primary mb-2">Course Catalog</h1>
           <p className="text-text-secondary">
             Browse our collection of {courses.length > 0 ? '17' : ''} coding courses and start learning today
           </p>
         </div>
 
         {/* Filters */}
-        <div className="card mb-8">
+        <div className="bg-stone-100/50 rounded-3xl p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="md:col-span-2 relative">
@@ -231,7 +231,7 @@ function CoursesContent() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden animate-pulse">
+              <div key={i} className="rounded-3xl overflow-hidden animate-pulse bg-white/40">
                 <div className="aspect-video bg-bg-tertiary" />
                 <div className="p-4">
                   <div className="h-4 bg-bg-tertiary rounded w-1/4 mb-2" />
@@ -302,31 +302,31 @@ function CourseCard({ course }: { course: Course }) {
 
   return (
     <Link href={`/courses/${course.slug}`} className="group">
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
+      <div className="rounded-3xl overflow-hidden hover:scale-[1.02] hover:shadow-card-hover transition-all duration-300 h-full flex flex-col bg-transparent hover:bg-white/60">
         {/* Thumbnail */}
-        <div className="relative aspect-video overflow-hidden">
+        <div className="relative aspect-video overflow-hidden bg-stone-100 rounded-t-3xl">
           {course.thumbnail ? (
             <Image
               src={course.thumbnail}
               alt={course.title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-              <span className="text-4xl">💻</span>
+            <div className="absolute inset-0 bg-gradient-to-br from-stone-300 to-stone-500 flex items-center justify-center">
+              <span className="text-4xl">{'\uD83D\uDCBB'}</span>
             </div>
           )}
           {course.isFeatured && (
-            <span className="absolute top-2 right-2 badge bg-yellow-400 text-yellow-900 text-xs shadow-sm">
+            <span className="absolute top-2 right-2 badge bg-amber-100 text-amber-900 text-xs">
               Featured
             </span>
           )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col p-4">
+        <div className="flex-1 flex flex-col p-5">
           <div className="flex items-center space-x-2 mb-2">
             <span className={`badge ${difficultyColors[course.difficulty]}`}>
               {course.difficulty.charAt(0) + course.difficulty.slice(1).toLowerCase()}
@@ -334,7 +334,7 @@ function CourseCard({ course }: { course: Course }) {
             <span className="text-xs text-text-secondary capitalize">{course.category}</span>
           </div>
 
-          <h3 className="text-base font-semibold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-primary transition-colors">
+          <h3 className="text-base font-display font-bold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-warm transition-colors">
             {course.title}
           </h3>
           <p className="text-xs text-text-secondary mb-2">by {course.instructor}</p>
@@ -342,25 +342,25 @@ function CourseCard({ course }: { course: Course }) {
 
           <div className="flex items-center text-xs text-text-secondary mb-3 space-x-3">
             <span>{formatDuration(course.duration)}</span>
-            <span>·</span>
+            <span>{'\u00B7'}</span>
             <span>{course.totalLessons} lessons</span>
-            <span>·</span>
+            <span>{'\u00B7'}</span>
             <span>{course.enrollmentCount.toLocaleString()} students</span>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-3 border-t border-stone-200/50">
             <div className="flex items-center space-x-1">
-              <span className="text-yellow-400 text-sm">⭐</span>
+              <span className="text-amber-400 text-sm">{'\u2605'}</span>
               <span className="font-semibold text-sm">{Number(course.rating).toFixed(1)}</span>
               <span className="text-text-secondary text-xs">({course.ratingCount})</span>
             </div>
             <div className="text-right">
-              <span className="text-lg font-bold text-accent-primary">
-                ${Number(course.price).toFixed(2)}
+              <span className="text-lg font-display font-bold text-text-primary">
+                {'\u00A3'}{Number(course.price).toFixed(2)}
               </span>
               {course.originalPrice && (
                 <span className="ml-2 text-sm text-text-secondary line-through">
-                  ${Number(course.originalPrice).toFixed(2)}
+                  {'\u00A3'}{Number(course.originalPrice).toFixed(2)}
                 </span>
               )}
             </div>

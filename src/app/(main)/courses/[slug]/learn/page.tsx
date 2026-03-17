@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/authStore'
@@ -40,8 +40,7 @@ interface PointsToast {
   newLevel: number
 }
 
-export default function CourseLearnPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = use(params)
+export default function CourseLearnPage({ params }: { params: { slug: string } }) {
   const [data, setData] = useState<CourseLearnData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null)
@@ -52,19 +51,19 @@ export default function CourseLearnPage({ params }: { params: Promise<{ slug: st
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push(`/login?redirect=/courses/${resolvedParams.slug}/learn`)
+      router.push(`/login?redirect=/courses/${params.slug}/learn`)
     }
-  }, [isAuthenticated, authLoading, router, resolvedParams.slug])
+  }, [isAuthenticated, authLoading, router, params.slug])
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchCourseContent()
     }
-  }, [isAuthenticated, resolvedParams.slug])
+  }, [isAuthenticated, params.slug])
 
   const fetchCourseContent = async () => {
     try {
-      const response = await fetch(`/api/courses/${resolvedParams.slug}/learn`)
+      const response = await fetch(`/api/courses/${params.slug}/learn`)
       const result = await response.json()
 
       if (result.success) {
@@ -74,7 +73,7 @@ export default function CourseLearnPage({ params }: { params: Promise<{ slug: st
         setSelectedModuleId(firstIncomplete?.id || result.data.modules[0]?.id || null)
       } else if (response.status === 403) {
         // Not enrolled — redirect to course detail
-        router.push(`/courses/${resolvedParams.slug}`)
+        router.push(`/courses/${params.slug}`)
       }
     } catch (err) {
       console.error('Failed to fetch course content:', err)

@@ -60,19 +60,19 @@ interface ActivityDay {
 }
 
 const QUICK_ACTIONS = [
-  { href: '/courses', icon: '📚', label: 'Browse Courses', color: 'bg-blue-50 border-blue-200 hover:bg-blue-100 text-blue-700' },
-  { href: '/cart', icon: '🛒', label: 'View Cart', color: 'bg-green-50 border-green-200 hover:bg-green-100 text-green-700' },
-  { href: '/profile', icon: '👤', label: 'Edit Profile', color: 'bg-purple-50 border-purple-200 hover:bg-purple-100 text-purple-700' },
-  { href: '/profile/orders', icon: '📦', label: 'Order History', color: 'bg-orange-50 border-orange-200 hover:bg-orange-100 text-orange-700' },
-  { href: '/leaderboard', icon: '🏆', label: 'Leaderboard', color: 'bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-700' },
+  { href: '/courses', icon: '📚', label: 'Browse Courses' },
+  { href: '/cart', icon: '🛒', label: 'View Cart' },
+  { href: '/profile', icon: '👤', label: 'Edit Profile' },
+  { href: '/profile/orders', icon: '📦', label: 'Order History' },
+  { href: '/leaderboard', icon: '🏆', label: 'Leaderboard' },
 ]
 
 const rarityColors: Record<string, string> = {
-  COMMON: 'border-gray-400',
-  UNCOMMON: 'border-green-500',
-  RARE: 'border-blue-500',
-  EPIC: 'border-purple-500',
-  LEGENDARY: 'border-yellow-500',
+  COMMON: 'border-stone-300',
+  UNCOMMON: 'border-stone-400',
+  RARE: 'border-stone-500',
+  EPIC: 'border-stone-700',
+  LEGENDARY: 'border-stone-900',
 }
 
 // Custom tooltip for the bar chart
@@ -80,9 +80,9 @@ function ActivityTooltip({ active, payload, label }: { active?: boolean; payload
   if (active && payload && payload.length) {
     const d = payload[0].payload
     return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-md px-3 py-2 text-sm">
+      <div className="bg-white border border-stone-200 rounded-xl shadow-md px-3 py-2 text-sm">
         <p className="font-semibold text-text-primary">{label}</p>
-        <p className="text-accent-primary">{d.modules} module{d.modules !== 1 ? 's' : ''}</p>
+        <p className="text-text-primary">{d.modules} module{d.modules !== 1 ? 's' : ''}</p>
         <p className="text-text-secondary">+{d.points} pts</p>
       </div>
     )
@@ -162,25 +162,25 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto">
 
         {/* Welcome Banner */}
-        <div className="mb-8 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white shadow-md">
+        <div className="mb-8 rounded-3xl bg-stone-900 p-6 text-white">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold mb-1">Welcome back, {user?.name}! 👋</h1>
-              <p className="text-blue-200">Track your learning progress and achievements</p>
+              <h1 className="text-2xl sm:text-3xl font-display font-bold mb-1">Welcome back, {user?.name}!</h1>
+              <p className="text-stone-400">Track your learning progress and achievements</p>
             </div>
             {stats && (
               <div className="flex items-center gap-3">
-                <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+                <div className="bg-white/10 rounded-2xl px-4 py-3 text-center">
                   <div className="text-2xl font-bold">{stats.level}</div>
-                  <div className="text-blue-200 text-xs">Level</div>
+                  <div className="text-stone-400 text-xs">Level</div>
                 </div>
-                <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+                <div className="bg-white/10 rounded-2xl px-4 py-3 text-center">
                   <div className="text-2xl font-bold">{stats.points.toLocaleString()}</div>
-                  <div className="text-blue-200 text-xs">Points</div>
+                  <div className="text-stone-400 text-xs">Points</div>
                 </div>
-                <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+                <div className="bg-white/10 rounded-2xl px-4 py-3 text-center">
                   <div className="text-2xl font-bold">{totalModulesThisWeek}</div>
-                  <div className="text-blue-200 text-xs">This week</div>
+                  <div className="text-stone-400 text-xs">This week</div>
                 </div>
               </div>
             )}
@@ -189,10 +189,10 @@ export default function DashboardPage() {
 
         {/* Primary Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <StatCard icon="⭐" value={loadingStats ? '—' : stats?.points.toLocaleString() || 0} label="Total Points" gradient="bg-gradient-to-br from-amber-400 to-orange-500" />
-          <StatCard icon="📈" value={loadingStats ? '—' : `Level ${stats?.level || 1}`} label="Current Level" gradient="bg-gradient-to-br from-blue-500 to-indigo-600" />
-          <StatCard icon="🔥" value={loadingStats ? '—' : `${stats?.currentStreak || 0}d`} label="Current Streak" gradient="bg-gradient-to-br from-orange-400 to-red-500" />
-          <StatCard icon="🏆" value={loadingStats ? '—' : stats?.badges.length || 0} label="Badges Earned" gradient="bg-gradient-to-br from-purple-500 to-pink-500" />
+          <StatCard icon="⭐" value={loadingStats ? '—' : stats?.points.toLocaleString() || 0} label="Total Points" />
+          <StatCard icon="📈" value={loadingStats ? '—' : `Level ${stats?.level || 1}`} label="Current Level" />
+          <StatCard icon="🔥" value={loadingStats ? '—' : `${stats?.currentStreak || 0}d`} label="Current Streak" />
+          <StatCard icon="🏆" value={loadingStats ? '—' : stats?.badges.length || 0} label="Badges Earned" />
         </div>
 
         {/* Secondary Stats Row */}
@@ -234,35 +234,35 @@ export default function DashboardPage() {
         <div className="card mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">Weekly Learning Activity</h2>
+              <h2 className="text-lg font-display font-semibold text-text-primary">Weekly Learning Activity</h2>
               <p className="text-sm text-text-secondary">Modules completed in the last 7 days</p>
             </div>
             {totalModulesThisWeek > 0 && (
               <div className="text-right">
-                <div className="text-2xl font-bold text-accent-primary">{totalModulesThisWeek}</div>
+                <div className="text-2xl font-bold text-text-primary">{totalModulesThisWeek}</div>
                 <div className="text-xs text-text-secondary">this week</div>
               </div>
             )}
           </div>
 
           {loadingActivity ? (
-            <div className="h-44 bg-bg-secondary rounded-lg animate-pulse" />
+            <div className="h-44 bg-bg-secondary rounded-2xl animate-pulse" />
           ) : activityData.every((d) => d.modules === 0) ? (
             <div className="h-44 flex flex-col items-center justify-center text-text-secondary">
               <span className="text-4xl mb-2">📊</span>
               <p className="text-sm">No activity yet this week.</p>
-              <Link href="/courses" className="text-accent-primary text-sm hover:underline mt-1">
+              <Link href="/courses" className="text-stone-900 font-medium text-sm hover:underline mt-1">
                 Start a course to track progress →
               </Link>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={176}>
               <BarChart data={activityData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip content={<ActivityTooltip />} cursor={{ fill: '#f1f5f9' }} />
-                <Bar dataKey="modules" fill="#2563eb" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" vertical={false} />
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#78716C' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#78716C' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip content={<ActivityTooltip />} cursor={{ fill: '#F5F5F4' }} />
+                <Bar dataKey="modules" fill="#1C1917" radius={[6, 6, 0, 0]} maxBarSize={40} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -272,8 +272,8 @@ export default function DashboardPage() {
           {/* My Courses */}
           <div className="card">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-text-primary">My Courses</h2>
-              <Link href="/courses" className="text-accent-primary text-sm hover:underline">Browse More</Link>
+              <h2 className="text-xl font-display font-semibold text-text-primary">My Courses</h2>
+              <Link href="/courses" className="text-stone-900 font-medium text-sm hover:underline">Browse More</Link>
             </div>
 
             {enrollments.length === 0 ? (
@@ -288,9 +288,9 @@ export default function DashboardPage() {
                   <Link
                     key={enrollment.id}
                     href={`/courses/${enrollment.course.slug}/learn`}
-                    className="flex items-center gap-3 p-3 bg-bg-secondary rounded-xl hover:bg-bg-tertiary transition-colors border border-gray-200"
+                    className="flex items-center gap-3 p-3 bg-bg-secondary rounded-2xl hover:bg-bg-tertiary transition-colors"
                   >
-                    <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600">
+                    <div className="relative w-16 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-stone-200">
                       {enrollment.course.thumbnail ? (
                         <Image
                           src={enrollment.course.thumbnail}
@@ -306,9 +306,9 @@ export default function DashboardPage() {
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-text-primary truncate text-sm">{enrollment.course.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
-                        <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-stone-200 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-accent-primary rounded-full"
+                            className="h-full bg-stone-900 rounded-full"
                             style={{ width: `${enrollment.progress}%` }}
                           />
                         </div>
@@ -323,7 +323,7 @@ export default function DashboardPage() {
 
           {/* Badges */}
           <div className="card">
-            <h2 className="text-xl font-semibold text-text-primary mb-4">
+            <h2 className="text-xl font-display font-semibold text-text-primary mb-4">
               Badges ({stats?.badges.length || 0})
             </h2>
 
@@ -337,11 +337,11 @@ export default function DashboardPage() {
                 {stats.badges.map((badge) => (
                   <div
                     key={badge.id}
-                    className={`relative p-3 bg-bg-secondary rounded-xl border-2 ${rarityColors[badge.rarity]} text-center group cursor-help`}
+                    className={`relative p-3 bg-bg-secondary rounded-2xl border-2 ${rarityColors[badge.rarity]} text-center group cursor-help`}
                   >
                     <div className="text-3xl mb-1">🏅</div>
                     <p className="text-xs text-text-primary font-medium truncate">{badge.name}</p>
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-48 z-10">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-white border border-stone-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none w-48 z-10">
                       <p className="text-xs text-text-primary font-medium">{badge.name}</p>
                       <p className="text-xs text-text-secondary">{badge.description}</p>
                     </div>
@@ -354,16 +354,16 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="card mt-8">
-          <h2 className="text-xl font-semibold text-text-primary mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-display font-semibold text-text-primary mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
             {QUICK_ACTIONS.map((action) => (
               <Link
                 key={action.href}
                 href={action.href}
-                className={`p-4 rounded-xl text-center border transition-colors ${action.color}`}
+                className="p-4 rounded-2xl text-center bg-bg-secondary hover:bg-bg-tertiary transition-colors"
               >
                 <div className="text-2xl mb-2">{action.icon}</div>
-                <span className="text-sm font-medium">{action.label}</span>
+                <span className="text-sm font-medium text-text-primary">{action.label}</span>
               </Link>
             ))}
           </div>
@@ -377,18 +377,16 @@ function StatCard({
   icon,
   value,
   label,
-  gradient,
 }: {
   icon: string
   value: string | number
   label: string
-  gradient: string
 }) {
   return (
-    <div className={`rounded-xl p-5 ${gradient} text-white shadow-sm`}>
+    <div className="rounded-2xl p-5 bg-bg-secondary">
       <div className="text-2xl mb-2">{icon}</div>
-      <div className="text-2xl font-bold leading-tight">{value}</div>
-      <div className="text-xs opacity-80 mt-1">{label}</div>
+      <div className="text-2xl font-bold text-text-primary leading-tight">{value}</div>
+      <div className="text-xs text-text-secondary mt-1">{label}</div>
     </div>
   )
 }

@@ -30,7 +30,7 @@ const FEATURED_COURSES = [
   },
   {
     title: 'Full Stack Development',
-    description: 'Build complete web applications from scratch — frontend to deployment',
+    description: 'Build complete web applications from scratch -- frontend to deployment',
     price: 79.99,
     originalPrice: 129.99,
     difficulty: 'Advanced',
@@ -44,55 +44,53 @@ const FEATURED_COURSES = [
 ]
 
 const CATEGORIES = [
-  { label: 'Python', emoji: '🐍', value: 'python' },
-  { label: 'JavaScript', emoji: '⚡', value: 'javascript' },
-  { label: 'TypeScript', emoji: '🔷', value: 'typescript' },
-  { label: 'Data Science', emoji: '📊', value: 'data' },
-  { label: 'Cloud', emoji: '☁️', value: 'cloud' },
-  { label: 'Databases', emoji: '🗄️', value: 'databases' },
-  { label: 'Security', emoji: '🔐', value: 'security' },
-  { label: 'Mobile', emoji: '📱', value: 'mobile' },
+  { label: 'Python', value: 'python' },
+  { label: 'JavaScript', value: 'javascript' },
+  { label: 'TypeScript', value: 'typescript' },
+  { label: 'Data Science', value: 'data' },
+  { label: 'Cloud', value: 'cloud' },
+  { label: 'Databases', value: 'databases' },
+  { label: 'Security', value: 'security' },
+  { label: 'Mobile', value: 'mobile' },
 ]
 
 export default function HomePage() {
   return (
     <div className="min-h-[calc(100vh-64px)]">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-800 py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Dot grid pattern */}
+      <section className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-bg-primary">
+        {/* Subtle radial gradient */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0"
           style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-            backgroundSize: '40px 40px',
+            background: 'radial-gradient(ellipse at 50% 0%, rgba(166,123,91,0.08) 0%, transparent 70%)',
           }}
         />
-        <div className="relative max-w-7xl mx-auto">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 text-white text-sm px-4 py-2 rounded-full mb-6 backdrop-blur-sm border border-white/20">
-              <span>🎓</span>
-              <span>10,000+ learners already enrolled</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Learn to Code.
+        <div className="relative max-w-7xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-sm font-medium text-text-secondary tracking-widest uppercase mb-6 fade-in-up">
+              10,000+ learners already enrolled
+            </p>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-display font-extrabold text-text-primary mb-6 leading-[1.1] tracking-tight fade-in-up" style={{ animationDelay: '0.1s' }}>
+              Master the Craft
               <br />
-              <span className="text-blue-200">Build Your Future.</span>
+              of Code
             </h1>
-            <p className="text-xl text-blue-100 mb-8 max-w-xl leading-relaxed">
+            <p className="text-lg text-text-secondary mb-10 max-w-xl mx-auto leading-relaxed fade-in-up" style={{ animationDelay: '0.2s' }}>
               Expert-led courses with AI-powered assistance. Earn points, unlock badges, and climb the leaderboard as you learn.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in-up" style={{ animationDelay: '0.3s' }}>
               <Link
                 href="/courses"
-                className="inline-flex items-center justify-center px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-lg shadow-md"
+                className="btn btn-primary text-lg px-10 py-4"
               >
                 Explore Courses
               </Link>
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center px-8 py-3 border-2 border-white/50 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors text-lg"
+                className="inline-flex items-center justify-center px-8 py-4 text-text-secondary font-medium hover:text-text-primary transition-colors text-lg"
               >
-                Get Started Free
+                {'Get Started Free \u2192'}
               </Link>
             </div>
           </div>
@@ -100,95 +98,94 @@ export default function HomePage() {
       </section>
 
       {/* Stats bar */}
-      <section className="bg-blue-900 py-4 px-4">
+      <section className="bg-bg-secondary py-6 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-            <StatItem icon="👨‍🎓" number="10,000+" label="Students" />
-            <StatItem icon="📚" number="5" label="Expert Courses" />
-            <StatItem icon="⭐" number="4.8" label="Avg Rating" />
-            <StatItem icon="🌐" number="100%" label="Online" />
+            <StatItem number="10,000+" label="Students" />
+            <StatItem number="5" label="Expert Courses" />
+            <StatItem number="4.8" label="Avg Rating" />
+            <StatItem number="100%" label="Online" />
           </div>
         </div>
       </section>
 
       {/* Category chips */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-bg-secondary border-b border-gray-200">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-bg-primary">
         <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wide">What do you want to learn?</p>
+          <p className="text-sm font-medium text-text-secondary mb-4 uppercase tracking-widest">What do you want to learn?</p>
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.label}
                 href={`/courses?category=${cat.value}`}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-100 rounded-full text-sm font-medium text-text-primary hover:bg-stone-900 hover:text-white transition-all duration-200"
               >
-                <span>{cat.emoji}</span>
                 <span>{cat.label}</span>
               </Link>
             ))}
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-accent-primary border border-accent-primary rounded-full text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 rounded-full text-sm font-medium text-white hover:bg-stone-800 transition-all duration-200"
             >
-              View All →
+              {'View All \u2192'}
             </Link>
           </div>
         </div>
       </section>
 
       {/* Featured Courses */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-8">
+          <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-text-primary">Most Popular Courses</h2>
-              <p className="text-text-secondary mt-1">Handpicked by our expert team</p>
+              <h2 className="text-3xl font-display font-bold text-text-primary">Most Popular Courses</h2>
+              <p className="text-text-secondary mt-2">Handpicked by our expert team</p>
             </div>
-            <Link href="/courses" className="hidden sm:block text-accent-primary hover:underline font-medium">
-              View All Courses →
+            <Link href="/courses" className="hidden sm:block text-text-secondary hover:text-text-primary font-medium transition-colors">
+              {'View All Courses \u2192'}
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {FEATURED_COURSES.map((course) => (
               <Link key={course.slug} href={`/courses/${course.slug}`} className="group">
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
-                  <div className="relative aspect-video overflow-hidden">
+                <div className="rounded-3xl overflow-hidden hover:scale-[1.02] transition-all duration-300 h-full flex flex-col bg-white/40 hover:bg-white/70 hover:shadow-card-hover">
+                  <div className="relative aspect-video overflow-hidden bg-stone-100">
                     <Image
                       src={course.thumbnail}
                       alt={course.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
-                    <div className="absolute top-2 left-2">
+                    <div className="absolute top-3 left-3">
                       <span
                         className={`badge text-xs ${
                           course.difficulty === 'Beginner'
-                            ? 'bg-green-100 text-green-800'
+                            ? 'bg-green-50 text-green-800'
                             : course.difficulty === 'Intermediate'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-amber-50 text-amber-800'
+                            : 'bg-red-50 text-red-800'
                         }`}
                       >
                         {course.difficulty}
                       </span>
                     </div>
                   </div>
-                  <div className="p-4 flex-1 flex flex-col">
-                    <h3 className="font-semibold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-primary transition-colors">
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="font-display font-bold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-warm transition-colors">
                       {course.title}
                     </h3>
                     <p className="text-xs text-text-secondary mb-2">by {course.instructor}</p>
-                    <p className="text-sm text-text-secondary mb-3 flex-1 line-clamp-2">{course.description}</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <p className="text-sm text-text-secondary mb-4 flex-1 line-clamp-2">{course.description}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-stone-200/50">
                       <div className="flex items-center gap-1">
-                        <span className="text-yellow-400 text-sm">⭐</span>
+                        <span className="text-amber-400 text-sm">{'\u2605'}</span>
                         <span className="text-sm font-semibold">{course.rating}</span>
                         <span className="text-xs text-text-secondary">({course.ratingCount.toLocaleString()})</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-lg font-bold text-accent-primary">${course.price}</span>
-                        <span className="ml-1 text-sm text-text-secondary line-through">${course.originalPrice}</span>
+                        <span className="text-lg font-display font-bold text-text-primary">{'\u00A3'}{course.price}</span>
+                        <span className="ml-1 text-sm text-text-secondary line-through">{'\u00A3'}{course.originalPrice}</span>
                       </div>
                     </div>
                   </div>
@@ -196,40 +193,31 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-          <div className="sm:hidden text-center mt-6">
+          <div className="sm:hidden text-center mt-8">
             <Link href="/courses" className="btn btn-secondary">View All Courses</Link>
           </div>
         </div>
       </section>
 
       {/* Why CodeEd */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-bg-secondary border-t border-gray-200">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-bg-secondary">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-text-primary mb-3">Why Choose CodeEd?</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-display font-bold text-text-primary mb-3">Why Choose CodeEd?</h2>
             <p className="text-text-secondary max-w-xl mx-auto">
               Everything you need to go from beginner to job-ready developer
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon="🤖"
-              color="bg-blue-100"
-              iconColor="text-blue-600"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <FeatureItem
               title="AI-Powered Assistant"
               description="Get personalized course recommendations and instant help from our AI chatbot, available 24/7."
             />
-            <FeatureCard
-              icon="🎮"
-              color="bg-green-100"
-              iconColor="text-green-600"
+            <FeatureItem
               title="Gamified Learning"
               description="Earn points, unlock badges, maintain streaks, and compete on the leaderboard as you progress."
             />
-            <FeatureCard
-              icon="💻"
-              color="bg-purple-100"
-              iconColor="text-purple-600"
+            <FeatureItem
               title="Hands-on Projects"
               description="Learn by doing with interactive exercises, real-world projects, and a growing curriculum."
             />
@@ -238,22 +226,22 @@ export default function HomePage() {
       </section>
 
       {/* CTA Banner */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-indigo-700">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-stone-900">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Coding Journey?</h2>
-          <p className="text-blue-100 mb-8 text-lg">
+          <h2 className="text-3xl font-display font-bold text-stone-50 mb-4">Ready to Start Your Coding Journey?</h2>
+          <p className="text-stone-400 mb-10 text-lg">
             Join 10,000+ learners who are already building their future with CodeEd.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-lg shadow-md"
+              className="inline-flex items-center justify-center px-10 py-4 bg-white text-stone-900 font-semibold rounded-full hover:bg-stone-100 transition-colors text-lg"
             >
               Create Free Account
             </Link>
             <Link
               href="/courses"
-              className="inline-flex items-center justify-center px-8 py-3 border-2 border-white/50 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors text-lg"
+              className="inline-flex items-center justify-center px-10 py-4 border-2 border-stone-600 text-stone-300 font-semibold rounded-full hover:border-stone-400 hover:text-white transition-colors text-lg"
             >
               Browse Courses
             </Link>
@@ -264,37 +252,27 @@ export default function HomePage() {
   )
 }
 
-function StatItem({ icon, number, label }: { icon: string; number: string; label: string }) {
+function StatItem({ number, label }: { number: string; label: string }) {
   return (
-    <div className="flex items-center gap-3 text-white py-2">
-      <span className="text-2xl">{icon}</span>
+    <div className="flex items-center gap-3 py-2">
       <div className="text-left">
-        <div className="font-bold text-lg leading-tight">{number}</div>
-        <div className="text-blue-300 text-sm">{label}</div>
+        <div className="font-display font-bold text-lg leading-tight text-text-primary">{number}</div>
+        <div className="text-text-secondary text-sm">{label}</div>
       </div>
     </div>
   )
 }
 
-function FeatureCard({
-  icon,
-  color,
-  iconColor,
+function FeatureItem({
   title,
   description,
 }: {
-  icon: string
-  color: string
-  iconColor: string
   title: string
   description: string
 }) {
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-      <div className={`w-14 h-14 ${color} rounded-xl flex items-center justify-center text-2xl mb-4`}>
-        <span className={iconColor}>{icon}</span>
-      </div>
-      <h3 className="text-xl font-semibold mb-2 text-text-primary">{title}</h3>
+    <div className="text-center">
+      <h3 className="text-xl font-display font-bold mb-2 text-text-primary">{title}</h3>
       <p className="text-text-secondary leading-relaxed">{description}</p>
     </div>
   )
