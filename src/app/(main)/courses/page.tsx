@@ -227,6 +227,33 @@ function CoursesContent() {
           </div>
         </div>
 
+        {/* Active filter chips */}
+        {(filters.search || filters.category || filters.difficulty) && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {filters.search && (
+              <button onClick={() => updateFilters({ search: '' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 text-white text-xs font-medium rounded-full hover:bg-stone-700 transition-colors">
+                Search: {filters.search}
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            )}
+            {filters.category && (
+              <button onClick={() => updateFilters({ category: '' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 text-white text-xs font-medium rounded-full hover:bg-stone-700 transition-colors">
+                {categories.find(c => c.value === filters.category)?.label || filters.category}
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            )}
+            {filters.difficulty && (
+              <button onClick={() => updateFilters({ difficulty: '' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 text-white text-xs font-medium rounded-full hover:bg-stone-700 transition-colors">
+                {difficulties.find(d => d.value === filters.difficulty)?.label || filters.difficulty}
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            )}
+            <button onClick={() => updateFilters({ search: '', category: '', difficulty: '' })} className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors">
+              Clear all
+            </button>
+          </div>
+        )}
+
         {/* Course Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -253,7 +280,7 @@ function CoursesContent() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
             {courses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
@@ -302,7 +329,7 @@ function CourseCard({ course }: { course: Course }) {
 
   return (
     <Link href={`/courses/${course.slug}`} className="group">
-      <div className="rounded-3xl overflow-hidden hover:scale-[1.02] hover:shadow-card-hover transition-all duration-300 h-full flex flex-col bg-transparent hover:bg-white/60">
+      <div className="rounded-3xl overflow-hidden hover:shadow-card-hover transition-all duration-300 h-full flex flex-col bg-white/60 hover:bg-white/90 hover-lift border border-stone-100/40">
         {/* Thumbnail */}
         <div className="relative aspect-video overflow-hidden bg-stone-100 rounded-t-3xl">
           {course.thumbnail ? (
@@ -310,7 +337,7 @@ function CourseCard({ course }: { course: Course }) {
               src={course.thumbnail}
               alt={course.title}
               fill
-              className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
@@ -323,6 +350,11 @@ function CourseCard({ course }: { course: Course }) {
               Featured
             </span>
           )}
+          {course.originalPrice && course.originalPrice > course.price && (
+            <span className="absolute top-2 left-2 bg-accent-teal text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              {Math.round((1 - course.price / Number(course.originalPrice)) * 100)}% OFF
+            </span>
+          )}
         </div>
 
         {/* Content */}
@@ -332,6 +364,9 @@ function CourseCard({ course }: { course: Course }) {
               {course.difficulty.charAt(0) + course.difficulty.slice(1).toLowerCase()}
             </span>
             <span className="text-xs text-text-secondary capitalize">{course.category}</span>
+            {course.enrollmentCount > 3000 && (
+              <span className="text-xs text-accent-teal font-medium">Trending</span>
+            )}
           </div>
 
           <h3 className="text-base font-display font-bold text-text-primary mb-1 line-clamp-2 group-hover:text-accent-warm transition-colors">

@@ -76,8 +76,8 @@ export default function LeaderboardPage() {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-text-primary mb-2">🏆 Leaderboard</h1>
+        <div className="mb-8 fade-in-up">
+          <h1 className="text-4xl font-display font-bold text-text-primary mb-2">Leaderboard</h1>
           <p className="text-text-secondary">
             Top learners ranked by total points earned. Keep learning to climb the ranks!
           </p>
@@ -85,31 +85,48 @@ export default function LeaderboardPage() {
 
         {/* Current user highlight */}
         {currentUserEntry && (
-          <div className="card mb-6 border-2 border-accent-primary bg-accent-primary/5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-accent-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                  {currentUserEntry.rank <= 3
-                    ? rankMedals[currentUserEntry.rank]
-                    : `#${currentUserEntry.rank}`}
+          <div className="mb-6 space-y-3">
+            <div className="card border-2 border-accent-primary bg-accent-primary/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-accent-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                    {currentUserEntry.rank <= 3
+                      ? rankMedals[currentUserEntry.rank]
+                      : `#${currentUserEntry.rank}`}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-text-primary">
+                      {currentUserEntry.name}{' '}
+                      <span className="text-accent-primary text-sm font-normal">(You)</span>
+                    </p>
+                    <p className="text-sm text-text-secondary">
+                      Level {currentUserEntry.level} · {currentUserEntry.coursesCompleted} courses · {currentUserEntry.badgeCount} badges
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-text-primary">
-                    {currentUserEntry.name}{' '}
-                    <span className="text-accent-primary text-sm font-normal">(You)</span>
+                <div className="text-right">
+                  <p className="text-xl font-bold text-accent-primary">
+                    {currentUserEntry.points.toLocaleString()}
                   </p>
-                  <p className="text-sm text-text-secondary">
-                    Level {currentUserEntry.level} · {currentUserEntry.coursesCompleted} courses · {currentUserEntry.badgeCount} badges
-                  </p>
+                  <p className="text-xs text-text-secondary">points</p>
                 </div>
-              </div>
-              <div className="text-right">
-                <p className="text-xl font-bold text-accent-primary">
-                  {currentUserEntry.points.toLocaleString()}
-                </p>
-                <p className="text-xs text-text-secondary">points</p>
               </div>
             </div>
+            {/* Nearest competitor nudge */}
+            {currentUserEntry.rank > 1 && (() => {
+              const above = entries.find(e => e.rank === currentUserEntry.rank - 1)
+              if (!above) return null
+              const gap = above.points - currentUserEntry.points
+              return (
+                <div className="px-4 py-3 bg-accent-teal/10 rounded-xl text-sm text-center">
+                  <span className="text-text-secondary">You&apos;re </span>
+                  <span className="font-bold text-accent-teal">{gap.toLocaleString()} points</span>
+                  <span className="text-text-secondary"> behind </span>
+                  <span className="font-semibold text-text-primary">{above.name}</span>
+                  <span className="text-text-secondary">. Complete 1 more module to close the gap!</span>
+                </div>
+              )
+            })()}
           </div>
         )}
 
@@ -117,9 +134,9 @@ export default function LeaderboardPage() {
         {entries.length >= 3 && (
           <div className="grid grid-cols-3 gap-4 mb-6">
             {/* 2nd place */}
-            <div className="card text-center pt-8 order-1">
+            <div className="card text-center pt-8 order-1 bg-gradient-to-b from-stone-100 to-white/80">
               <div className="text-3xl mb-2">🥈</div>
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2">
+              <div className="w-12 h-12 bg-gradient-to-br from-stone-300 to-stone-400 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2 text-white">
                 {entries[1]?.name.charAt(0).toUpperCase()}
               </div>
               <p className="font-medium text-text-primary text-sm truncate">{entries[1]?.name}</p>
@@ -139,9 +156,9 @@ export default function LeaderboardPage() {
             </div>
 
             {/* 3rd place */}
-            <div className="card text-center pt-8 order-3">
+            <div className="card text-center pt-8 order-3 bg-gradient-to-b from-orange-50 to-white/80">
               <div className="text-3xl mb-2">🥉</div>
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-200 to-orange-400 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-2 text-white">
                 {entries[2]?.name.charAt(0).toUpperCase()}
               </div>
               <p className="font-medium text-text-primary text-sm truncate">{entries[2]?.name}</p>

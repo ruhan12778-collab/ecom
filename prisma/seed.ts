@@ -65,7 +65,7 @@ async function main() {
       title: 'Python for Beginners', slug: 'python-for-beginners',
       description: 'Start your coding journey with Python. Learn the fundamentals of programming with one of the most popular and beginner-friendly languages.',
       longDescription: 'This comprehensive course covers everything you need to know to start programming with Python. From basic syntax to functions, data structures, and beyond.',
-      thumbnail: UNS('photo-1526379879527-8559ecfcaec0'),
+      thumbnail: UNS('photo-1526379095098-d400fd0bf935'),
       price: 29.99, originalPrice: 49.99, difficulty: 'BEGINNER', category: 'python',
       tags: 'python,programming,beginner,coding', duration: 600, totalLessons: 24,
       rating: 4.8, ratingCount: 1250, enrollmentCount: 5420,

@@ -22,12 +22,16 @@ const config: Config = {
           primary: '#1C1917',
           warm: '#A67B5B',
           cool: '#E2E8F0',
+          teal: '#0D9488',
           success: '#16a34a',
           warning: '#ca8a04',
           error: '#dc2626',
         },
         points: {
           gold: '#eab308',
+        },
+        streak: {
+          fire: '#F97316',
         },
         brand: {
           50: '#FAF7F5',

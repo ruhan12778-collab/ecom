@@ -12,7 +12,7 @@ const FEATURED_COURSES = [
     ratingCount: 1250,
     slug: 'python-for-beginners',
     instructor: 'Dr. Sarah Chen',
-    thumbnail: 'https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?w=800&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop',
     students: 5420,
   },
   {
