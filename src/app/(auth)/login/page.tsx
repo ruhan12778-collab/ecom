@@ -22,7 +22,8 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password)
-      router.push('/dashboard')
+      const { user } = useAuthStore.getState()
+      router.push(user?.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
@@ -103,9 +104,12 @@ export default function LoginPage() {
           </div>
 
           {/* Demo credentials */}
-          <div className="mt-6 p-3 bg-bg-tertiary rounded-lg">
+          <div className="mt-6 p-3 bg-bg-tertiary rounded-lg space-y-1">
             <p className="text-xs text-text-secondary text-center">
               Demo: test@example.com / password123
+            </p>
+            <p className="text-xs text-text-secondary text-center">
+              Admin: admin@codeed.com / admin123
             </p>
           </div>
         </div>

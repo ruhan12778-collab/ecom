@@ -43,6 +43,8 @@ export default function CartPage() {
           orderNumber: data.data.order.orderNumber,
           pointsEarned: data.data.pointsEarned,
         })
+        // Sync header points
+        useAuthStore.getState().checkAuth()
       } else {
         alert(data.error || 'Checkout failed')
       }

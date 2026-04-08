@@ -1,9 +1,6 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { ChatWidget } from '@/components/chatbot/ChatWidget'
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -28,12 +25,7 @@ export default function RootLayout({
         <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&f[]=satoshi@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className={`${jetbrainsMono.variable} font-sans bg-bg-primary min-h-screen flex flex-col`}>
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <ChatWidget />
+        {children}
       </body>
     </html>
   )

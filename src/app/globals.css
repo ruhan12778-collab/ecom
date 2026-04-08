@@ -227,3 +227,15 @@ pre code {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.08);
 }
+
+/* Infinite scroll carousel */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+.animate-scroll-left:hover {
+  animation-play-state: paused;
+}

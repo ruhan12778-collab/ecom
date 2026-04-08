@@ -55,18 +55,6 @@ function SparkIcon() {
   )
 }
 
-function LevelProgressBar({ points }: { points: number }) {
-  const progress = getLevelProgress(points)
-  return (
-    <div className="h-[2px] w-full bg-stone-100">
-      <div
-        className="h-full bg-accent-teal transition-all duration-500 ease-out"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  )
-}
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -98,6 +86,7 @@ export function Header() {
     { href: '/profile', label: 'Profile' },
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/profile/orders', label: 'Order History' },
+    ...(user?.role === 'ADMIN' ? [{ href: '/admin/dashboard', label: 'Admin Panel' }] : []),
   ]
 
   return (
@@ -255,8 +244,6 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Level progress bar — full width, under nav */}
-      {isAuthenticated && user && <LevelProgressBar points={user.points ?? 0} />}
 
       {/* Mobile menu */}
       {mobileMenuOpen && (

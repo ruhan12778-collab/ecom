@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { AnimatedStats } from '@/components/home/AnimatedStats'
+import { TechCarousel } from '@/components/home/TechCarousel'
 
 const FEATURED_COURSES = [
   {
@@ -43,16 +45,6 @@ const FEATURED_COURSES = [
   },
 ]
 
-const CATEGORIES = [
-  { label: 'Python', value: 'python' },
-  { label: 'JavaScript', value: 'javascript' },
-  { label: 'TypeScript', value: 'typescript' },
-  { label: 'Data Science', value: 'data' },
-  { label: 'Cloud', value: 'cloud' },
-  { label: 'Databases', value: 'databases' },
-  { label: 'Security', value: 'security' },
-  { label: 'Mobile', value: 'mobile' },
-]
 
 export default function HomePage() {
   return (
@@ -97,41 +89,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats bar */}
-      <section className="bg-bg-secondary py-6 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-            <StatItem number="10,000+" label="Students" />
-            <StatItem number="5" label="Expert Courses" />
-            <StatItem number="4.8" label="Avg Rating" />
-            <StatItem number="100%" label="Online" />
-          </div>
-        </div>
-      </section>
+      {/* Animated Stats Bar */}
+      <AnimatedStats />
 
-      {/* Category chips */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-bg-primary">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-medium text-text-secondary mb-4 uppercase tracking-widest">What do you want to learn?</p>
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.label}
-                href={`/courses?category=${cat.value}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-100 rounded-full text-sm font-medium text-text-primary hover:bg-stone-900 hover:text-white transition-all duration-200"
-              >
-                <span>{cat.label}</span>
-              </Link>
-            ))}
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-900 rounded-full text-sm font-medium text-white hover:bg-stone-800 transition-all duration-200"
-            >
-              {'View All \u2192'}
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Tech Logo Carousel */}
+      <TechCarousel />
 
       {/* Featured Courses */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
@@ -248,17 +210,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </div>
-  )
-}
-
-function StatItem({ number, label }: { number: string; label: string }) {
-  return (
-    <div className="flex items-center gap-3 py-2">
-      <div className="text-left">
-        <div className="font-display font-bold text-lg leading-tight text-text-primary">{number}</div>
-        <div className="text-text-secondary text-sm">{label}</div>
-      </div>
     </div>
   )
 }

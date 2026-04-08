@@ -92,7 +92,7 @@ function ActivityTooltip({ active, payload, label }: { active?: boolean; payload
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { user, isAuthenticated, isLoading } = useAuthStore()
+  const { user, isAuthenticated, isLoading, checkAuth } = useAuthStore()
   const [stats, setStats] = useState<Stats | null>(null)
   const [enrollments, setEnrollments] = useState<Enrollment[]>([])
   const [activityData, setActivityData] = useState<ActivityDay[]>([])
@@ -117,7 +117,10 @@ export default function DashboardPage() {
     try {
       const response = await fetch('/api/gamification/stats')
       const data = await response.json()
-      if (data.success) setStats(data.data)
+      if (data.success) {
+        setStats(data.data)
+        checkAuth() // Sync header points with latest data
+      }
     } catch (error) {
       console.error('Failed to fetch stats:', error)
     } finally {

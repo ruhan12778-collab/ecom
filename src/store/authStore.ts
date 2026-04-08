@@ -6,6 +6,7 @@ export interface User {
   email: string
   name: string
   skillLevel: 'beginner' | 'intermediate' | 'advanced'
+  role: string
   points: number
   level: number
 }
@@ -40,7 +41,7 @@ export const useAuthStore = create<AuthState>()(
 
         if (!response.ok) {
           const error = await response.json()
-          throw new Error(error.message || 'Login failed')
+          throw new Error(error.error || error.message || 'Login failed')
         }
 
         const data = await response.json()

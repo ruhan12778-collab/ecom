@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         name: user.name,
         skillLevel: user.skillLevel,
+        role: user.role,
         points: user.gamification?.points || 0,
         level: user.gamification?.level || 1,
       },

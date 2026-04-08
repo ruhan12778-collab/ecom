@@ -16,6 +16,7 @@ export interface AuthUser {
   email: string
   name: string
   skillLevel: string
+  role: string
   points: number
   level: number
 }
@@ -123,6 +124,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       email: user.email,
       name: user.name,
       skillLevel: user.skillLevel,
+      role: user.role,
       points: user.gamification?.points || 0,
       level: user.gamification?.level || 1,
     }
@@ -143,9 +145,17 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     email: user.email,
     name: user.name,
     skillLevel: user.skillLevel,
+    role: user.role,
     points: user.gamification?.points || 0,
     level: user.gamification?.level || 1,
   }
+}
+
+// Check if current user is admin, returns user or null
+export async function requireAdmin(): Promise<AuthUser | null> {
+  const user = await getCurrentUser()
+  if (!user || user.role !== 'ADMIN') return null
+  return user
 }
 
 // Store refresh token in database

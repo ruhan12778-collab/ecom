@@ -21,6 +21,7 @@ model User {
   name         String
   avatar       String?
   skillLevel   String   @default("BEGINNER") // BEGINNER, INTERMEDIATE, ADVANCED
+  role         String   @default("USER") // USER, ADMIN
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -281,4 +282,20 @@ model ChatMessage {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+// ============================================
+// CMS PAGES
+// ============================================
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
 }
