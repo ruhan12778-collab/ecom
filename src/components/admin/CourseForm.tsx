@@ -11,10 +11,32 @@ interface CourseFormProps {
 const CATEGORIES = [
   { value: 'python', label: 'Python' },
   { value: 'javascript', label: 'JavaScript' },
+  { value: 'typescript', label: 'TypeScript' },
   { value: 'web', label: 'Web Development' },
+  { value: 'mobile', label: 'Mobile Development' },
   { value: 'data-science', label: 'Data Science' },
   { value: 'devops', label: 'DevOps' },
   { value: 'system-design', label: 'System Design' },
+  { value: 'cybersecurity', label: 'Cybersecurity' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'blockchain', label: 'Blockchain' },
+  { value: 'database', label: 'Databases' },
+  { value: 'cloud', label: 'Cloud' },
+]
+
+const THUMBNAIL_SUGGESTIONS = [
+  'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1579403124614-197f69d8187b?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1639762681057-408e52192e55?w=800&auto=format&fit=crop',
 ]
 
 const DIFFICULTIES = [
@@ -209,7 +231,7 @@ export default function CourseForm({ initialData, onSubmit, isEdit = false }: Co
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-stone-700 mb-1">Category</label>
           <select
@@ -233,15 +255,77 @@ export default function CourseForm({ initialData, onSubmit, isEdit = false }: Co
             className="input"
           />
         </div>
+      </div>
+
+      {/* Thumbnail section with preview and suggestions */}
+      <div className="space-y-3">
+        <label className="block text-sm font-medium text-stone-700">Course Thumbnail</label>
+
+        <div className="flex gap-4">
+          {/* Preview */}
+          <div className="w-48 h-28 rounded-lg border border-stone-200 overflow-hidden bg-stone-50 flex-shrink-0">
+            {formData.thumbnail ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={formData.thumbnail}
+                alt="Thumbnail preview"
+                className="w-full h-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-stone-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {/* URL input + clear */}
+          <div className="flex-1 flex flex-col gap-2">
+            <input
+              type="text"
+              name="thumbnail"
+              value={formData.thumbnail}
+              onChange={handleChange}
+              className="input"
+              placeholder="https://images.unsplash.com/..."
+            />
+            <div className="flex items-center gap-2">
+              {formData.thumbnail && (
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, thumbnail: '' }))}
+                  className="text-xs text-stone-500 hover:text-red-500 transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+              <span className="text-xs text-stone-400">Paste a URL or pick a suggestion below</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Suggestions grid */}
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">Thumbnail URL</label>
-          <input
-            type="text"
-            name="thumbnail"
-            value={formData.thumbnail}
-            onChange={handleChange}
-            className="input"
-          />
+          <p className="text-xs font-medium text-stone-500 mb-2">Quick picks</p>
+          <div className="grid grid-cols-6 gap-2">
+            {THUMBNAIL_SUGGESTIONS.map((url, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, thumbnail: url }))}
+                className={`relative aspect-video rounded-md overflow-hidden border-2 transition-all ${
+                  formData.thumbnail === url
+                    ? 'border-accent-teal ring-2 ring-accent-teal/20'
+                    : 'border-stone-200 hover:border-stone-400'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt={`Option ${i + 1}`} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

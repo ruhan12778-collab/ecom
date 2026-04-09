@@ -37,10 +37,11 @@ export default function ModulesPage({ params }: { params: Promise<{ id: string }
   const fetchData = async (id: string) => {
     try {
       const res = await fetch(`/api/admin/courses/${id}`)
-      const data = await res.json()
-      setCourseTitle(data.title || '')
+      const json = await res.json()
+      const course = json.data || json
+      setCourseTitle(course.title || '')
       setModules(
-        (data.modules || []).sort((a: Module, b: Module) => a.order - b.order)
+        (course.modules || []).sort((a: Module, b: Module) => a.order - b.order)
       )
     } catch (err) {
       console.error('Failed to fetch course:', err)

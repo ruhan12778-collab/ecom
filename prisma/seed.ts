@@ -832,6 +832,125 @@ async function main() {
 
   console.log('✅ Enrolled test user in 4 courses with progress')
   console.log('✅ Created 2 orders for test user')
+
+  // ─── Extra users, enrollments, and orders for realistic dashboard data ─────
+  const extraUserNames = [
+    { name: 'Sarah Williams', email: 'sarah.williams@example.com', skillLevel: 'ADVANCED', points: 2850, level: 7, currentStreak: 18, longestStreak: 25 },
+    { name: 'Michael Brown', email: 'michael.brown@example.com', skillLevel: 'INTERMEDIATE', points: 1420, level: 5, currentStreak: 4, longestStreak: 11 },
+    { name: 'Jessica Davis', email: 'jessica.davis@example.com', skillLevel: 'BEGINNER', points: 320, level: 2, currentStreak: 2, longestStreak: 5 },
+    { name: 'David Wilson', email: 'david.wilson@example.com', skillLevel: 'ADVANCED', points: 3100, level: 8, currentStreak: 22, longestStreak: 30 },
+    { name: 'Rachel Martinez', email: 'rachel.martinez@example.com', skillLevel: 'INTERMEDIATE', points: 890, level: 4, currentStreak: 0, longestStreak: 8 },
+    { name: 'Thomas Anderson', email: 'thomas.anderson@example.com', skillLevel: 'ADVANCED', points: 2200, level: 6, currentStreak: 15, longestStreak: 20 },
+    { name: 'Lisa Garcia', email: 'lisa.garcia@example.com', skillLevel: 'BEGINNER', points: 180, level: 2, currentStreak: 1, longestStreak: 3 },
+    { name: 'Kevin Lee', email: 'kevin.lee@example.com', skillLevel: 'INTERMEDIATE', points: 1650, level: 5, currentStreak: 9, longestStreak: 14 },
+    { name: 'Amanda Taylor', email: 'amanda.taylor@example.com', skillLevel: 'ADVANCED', points: 2700, level: 7, currentStreak: 11, longestStreak: 19 },
+    { name: 'Brian Moore', email: 'brian.moore@example.com', skillLevel: 'BEGINNER', points: 420, level: 3, currentStreak: 3, longestStreak: 7 },
+    { name: 'Natalie Jackson', email: 'natalie.jackson@example.com', skillLevel: 'INTERMEDIATE', points: 1200, level: 4, currentStreak: 6, longestStreak: 12 },
+    { name: 'Daniel Thompson', email: 'daniel.thompson@example.com', skillLevel: 'ADVANCED', points: 2400, level: 6, currentStreak: 14, longestStreak: 21 },
+    { name: 'Hannah White', email: 'hannah.white@example.com', skillLevel: 'BEGINNER', points: 260, level: 2, currentStreak: 2, longestStreak: 4 },
+    { name: 'Ryan Harris', email: 'ryan.harris@example.com', skillLevel: 'INTERMEDIATE', points: 1580, level: 5, currentStreak: 7, longestStreak: 13 },
+    { name: 'Olivia Martin', email: 'olivia.martin@example.com', skillLevel: 'ADVANCED', points: 1950, level: 6, currentStreak: 10, longestStreak: 16 },
+  ]
+
+  const extraUsers: { id: string; name: string }[] = []
+  for (let i = 0; i < extraUserNames.length; i++) {
+    const u = extraUserNames[i]
+    // Join dates spread over the last 6 months
+    const daysAgo = Math.floor(Math.random() * 180) + 30
+    const createdAt = new Date(Date.now() - daysAgo * 86400000)
+    const user = await prisma.user.create({
+      data: {
+        email: u.email,
+        password: hashedPassword,
+        name: u.name,
+        skillLevel: u.skillLevel as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED',
+        createdAt,
+        gamification: {
+          create: {
+            points: u.points,
+            level: u.level,
+            currentStreak: u.currentStreak,
+            longestStreak: u.longestStreak,
+            coursesCompleted: Math.floor(u.points / 500),
+            modulesCompleted: Math.floor(u.points / 30),
+            totalWatchTime: u.points * 2,
+          },
+        },
+      },
+    })
+    extraUsers.push({ id: user.id, name: user.name })
+  }
+  console.log(`✅ Created ${extraUsers.length} extra users`)
+
+  // Create enrollments for the extra users
+  const courseIds = courses.map((c: any) => c.id)
+  let enrollmentCount = 0
+  for (const user of extraUsers) {
+    const numCourses = Math.floor(Math.random() * 3) + 1 // 1-3 courses per user
+    const pickedCourseIds = [...courseIds].sort(() => Math.random() - 0.5).slice(0, numCourses)
+    for (const cid of pickedCourseIds) {
+      const progress = Math.floor(Math.random() * 101)
+      const daysAgo = Math.floor(Math.random() * 60)
+      try {
+        await prisma.enrollment.create({
+          data: {
+            userId: user.id,
+            courseId: cid,
+            progress,
+            enrolledAt: new Date(Date.now() - daysAgo * 86400000),
+            completedAt: progress === 100 ? new Date() : null,
+          },
+        })
+        enrollmentCount++
+      } catch {
+        // skip unique constraint collisions
+      }
+    }
+  }
+  console.log(`✅ Created ${enrollmentCount} extra enrollments`)
+
+  // Create orders for extra users
+  const orderStatuses = ['COMPLETED', 'COMPLETED', 'COMPLETED', 'COMPLETED', 'PENDING', 'PROCESSING', 'CANCELLED']
+  const paymentMethods = ['card', 'paypal', 'card']
+  let orderCount = 0
+  let orderNumber = 3
+  for (const user of extraUsers) {
+    const numOrders = Math.floor(Math.random() * 3) + 1 // 1-3 orders per user
+    for (let o = 0; o < numOrders; o++) {
+      const numItems = Math.floor(Math.random() * 3) + 1 // 1-3 items per order
+      const pickedCourses = [...courses].sort(() => Math.random() - 0.5).slice(0, numItems)
+      const subtotal = pickedCourses.reduce((sum: number, c: any) => sum + Number(c.price), 0)
+      const status = orderStatuses[Math.floor(Math.random() * orderStatuses.length)]
+      const daysAgo = Math.floor(Math.random() * 120)
+      try {
+        await prisma.order.create({
+          data: {
+            userId: user.id,
+            orderNumber: `ORD-2026-${String(orderNumber).padStart(3, '0')}`,
+            status,
+            subtotal,
+            discount: 0,
+            total: subtotal,
+            paymentMethod: paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+            paymentId: `demo_pay_${orderNumber}`,
+            createdAt: new Date(Date.now() - daysAgo * 86400000),
+            items: {
+              create: pickedCourses.map((c: any) => ({
+                courseId: c.id,
+                price: Number(c.price),
+              })),
+            },
+          },
+        })
+        orderCount++
+        orderNumber++
+      } catch {
+        // skip collisions
+      }
+    }
+  }
+  console.log(`✅ Created ${orderCount} extra orders`)
+
   console.log('🎉 Database seeded successfully!')
 }
 

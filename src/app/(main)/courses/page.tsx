@@ -328,8 +328,8 @@ function CourseCard({ course }: { course: Course }) {
   }
 
   return (
-    <Link href={`/courses/${course.slug}`} className="group">
-      <div className="rounded-3xl overflow-hidden hover:shadow-card-hover transition-all duration-300 h-full flex flex-col bg-white/60 hover:bg-white/90 hover-lift border border-stone-100/40">
+    <Link href={`/courses/${course.slug}`} className="group [perspective:1200px]">
+      <div className="rounded-3xl overflow-hidden h-full flex flex-col bg-white/60 border border-stone-100/40 transition-all duration-300 ease-out will-change-transform group-hover:bg-white group-hover:border-accent-teal/30 group-hover:-translate-y-2 group-hover:[transform:translateY(-8px)_rotateX(2deg)_scale(1.02)] group-hover:shadow-[0_25px_50px_-12px_rgba(13,148,136,0.25),0_10px_20px_-8px_rgba(0,0,0,0.1)] group-hover:ring-1 group-hover:ring-accent-teal/20">
         {/* Thumbnail */}
         <div className="relative aspect-video overflow-hidden bg-stone-100 rounded-t-3xl">
           {course.thumbnail ? (
@@ -337,7 +337,7 @@ function CourseCard({ course }: { course: Course }) {
               src={course.thumbnail}
               alt={course.title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (

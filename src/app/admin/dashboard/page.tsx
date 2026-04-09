@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import {
   AreaChart,
   Area,
@@ -148,6 +149,7 @@ export default function AdminDashboard() {
     {
       label: 'Total Users',
       value: stats.totalUsers.toLocaleString(),
+      href: '/admin/users',
       change: '+12%',
       positive: true,
       bgColor: 'bg-blue-50',
@@ -161,6 +163,7 @@ export default function AdminDashboard() {
     {
       label: 'Total Courses',
       value: stats.totalCourses.toLocaleString(),
+      href: '/admin/courses',
       change: '+3',
       positive: true,
       bgColor: 'bg-teal-50',
@@ -174,6 +177,7 @@ export default function AdminDashboard() {
     {
       label: 'Total Orders',
       value: stats.totalOrders.toLocaleString(),
+      href: '/admin/orders',
       change: '+8%',
       positive: true,
       bgColor: 'bg-amber-50',
@@ -187,6 +191,7 @@ export default function AdminDashboard() {
     {
       label: 'Total Revenue',
       value: `£${Number(stats.totalRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      href: '/admin/orders?status=COMPLETED',
       change: '+23%',
       positive: true,
       bgColor: 'bg-green-50',
@@ -200,6 +205,7 @@ export default function AdminDashboard() {
     {
       label: 'Enrollments',
       value: (stats.totalEnrollments ?? 0).toLocaleString(),
+      href: '/admin/users',
       change: '+18%',
       positive: true,
       bgColor: 'bg-purple-50',
@@ -219,9 +225,10 @@ export default function AdminDashboard() {
       {/* ── KPI Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {kpis.map((kpi) => (
-          <div
+          <Link
             key={kpi.label}
-            className="bg-white rounded-xl border border-stone-200 p-5 flex flex-col gap-3"
+            href={kpi.href}
+            className="bg-white rounded-xl border border-stone-200 p-5 flex flex-col gap-3 hover:border-stone-300 hover:shadow-sm transition-all cursor-pointer group"
           >
             <div className="flex items-center justify-between">
               <div className={`${kpi.bgColor} ${kpi.textColor} w-10 h-10 rounded-lg flex items-center justify-center`}>
@@ -237,9 +244,14 @@ export default function AdminDashboard() {
             </div>
             <div>
               <p className="text-2xl font-bold text-stone-900 tracking-tight">{kpi.value}</p>
-              <p className="text-sm text-stone-500 mt-0.5">{kpi.label}</p>
+              <p className="text-sm text-stone-500 mt-0.5 flex items-center gap-1">
+                {kpi.label}
+                <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -458,7 +470,11 @@ export default function AdminDashboard() {
               </thead>
               <tbody className="divide-y divide-stone-50">
                 {stats.recentUsers.slice(0, 5).map((user: any) => (
-                  <tr key={user.id} className="hover:bg-stone-50/50 transition-colors">
+                  <tr
+                    key={user.id}
+                    onClick={() => { window.location.href = `/admin/users/${user.id}` }}
+                    className="hover:bg-stone-50/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-6 py-3 text-sm text-stone-900 font-medium">{user.name}</td>
                     <td className="px-6 py-3 text-sm text-stone-500 truncate max-w-[160px]">{user.email}</td>
                     <td className="px-6 py-3 text-sm text-stone-900 tabular-nums">{user.gamification?.level ?? 1}</td>

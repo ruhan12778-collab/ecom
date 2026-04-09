@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function AdminUsersPage() {
+  const router = useRouter()
   const [users, setUsers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -77,7 +79,11 @@ export default function AdminUsersPage() {
               </thead>
               <tbody className="divide-y divide-stone-50">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-stone-50/50 transition-colors">
+                  <tr
+                    key={user.id}
+                    onClick={() => router.push(`/admin/users/${user.id}`)}
+                    className="hover:bg-stone-50/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-stone-100 text-stone-600 text-xs font-medium flex items-center justify-center">
