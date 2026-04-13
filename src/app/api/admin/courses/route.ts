@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         originalPrice: body.originalPrice ? parseFloat(String(body.originalPrice)) : null,
         difficulty,
         category,
-        tags: body.tags || null,
+        tags: Array.isArray(body.tags) ? body.tags.join(', ') : (body.tags || null),
         duration: parseInt(String(duration)),
         totalLessons: body.totalLessons ? parseInt(String(body.totalLessons)) : 0,
         instructor,

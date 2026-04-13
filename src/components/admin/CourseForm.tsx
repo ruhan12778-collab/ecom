@@ -69,7 +69,7 @@ export default function CourseForm({ initialData, onSubmit, isEdit = false }: Co
     tags: '',
     duration: 0,
     totalLessons: 0,
-    isPublished: false,
+    isPublished: true,
     isFeatured: false,
   })
   const [submitting, setSubmitting] = useState(false)

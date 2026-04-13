@@ -65,7 +65,11 @@ export async function PUT(
     const booleanFields = ['isPublished', 'isFeatured']
 
     for (const field of stringFields) {
-      if (body[field] !== undefined) updateData[field] = body[field]
+      if (body[field] !== undefined) {
+        updateData[field] = field === 'tags' && Array.isArray(body[field])
+          ? body[field].join(', ')
+          : body[field]
+      }
     }
     for (const field of booleanFields) {
       if (body[field] !== undefined) updateData[field] = body[field]
