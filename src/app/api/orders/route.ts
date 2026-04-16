@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { createOrderSchema, POINT_VALUES } from '@/types'
+import { sendPurchaseConfirmationEmail } from '@/lib/email'
 
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase()
@@ -111,6 +112,18 @@ export async function POST(request: NextRequest) {
     await prisma.cartItem.deleteMany({
       where: { userId: user.id },
     })
+
+    // Send purchase confirmation email (fire-and-forget; failures must not break checkout)
+    sendPurchaseConfirmationEmail({
+      to: user.email,
+      userName: user.name || 'there',
+      orderNumber: order.orderNumber,
+      courses: order.items.map((i) => ({
+        title: i.course.title,
+        slug: i.course.slug,
+        price: Number(i.price),
+      })),
+    }).catch((err) => console.error('[orders] email dispatch error:', err))
 
     // Award points
     const isFirstPurchase = await prisma.order.count({
