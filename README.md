@@ -37,7 +37,7 @@ An e-commerce platform for purchasing and learning coding courses, featuring an 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/ruhankhan/codeed.git
+git clone https://github.com/ruhan12778-collab/ecom
 cd codeed
 ```
 
